@@ -1,0 +1,9 @@
+.env
+config.yml
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+.DS_Store
+skills/brain-ingest/scripts/batch_ingest_checkpoint.json

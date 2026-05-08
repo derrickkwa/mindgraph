@@ -1,0 +1,27 @@
+# Copy to config.yml and personalise.
+
+# Path to your notes folder (markdown files)
+notes_folder: ~/Documents/my-notes
+
+# LLM for concept extraction: auto | gemini | claude
+# auto = uses Gemini if GEMINI_API_KEY set, otherwise Claude
+llm_provider: auto
+
+# Wing/room structure — map folder paths to Mempalace wings + rooms.
+# Paths are relative to notes_folder. Files not matching any pattern
+# go to defaults.wing / defaults.room.
+wings:
+  - name: work
+    rooms:
+      projects: [work/projects/]
+      meetings: [work/meetings/]
+      reference: [work/reference/]
+  - name: personal
+    rooms:
+      notes: [personal/notes/]
+      journal: [personal/journal/]
+      ideas: [personal/ideas/]
+
+defaults:
+  wing: misc
+  room: general

@@ -1,0 +1,14 @@
+[project]
+name = "mindgraph"
+version = "0.1.0"
+description = "Claude Code second brain template built on Mempalace"
+requires-python = ">=3.11"
+dependencies = ["pyyaml>=6.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
