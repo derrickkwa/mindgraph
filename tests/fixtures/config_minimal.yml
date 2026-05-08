@@ -1,0 +1,5 @@
+notes_folder: /tmp/notes
+wings: []
+defaults:
+  wing: misc
+  room: general
