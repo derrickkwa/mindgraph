@@ -30,8 +30,8 @@ Accept multiple. For each:
   `~/.mempalace/adapters/<source>.py`.
 
 ### 3. Write config
-Build the `sources` list and call `write_config.set_sources(...)` (run a short python -c, or
-`python3 ${CLAUDE_PLUGIN_ROOT}/scripts/write_config.py` with the sources on stdin).
+Build the `sources` list as JSON and pipe it to the CLI:
+`echo '<json sources>' | PYTHONPYCACHEPREFIX=/tmp/mgpyc python3 ${CLAUDE_PLUGIN_ROOT}/scripts/write_config.py set-sources`
 
 ### 4. First ingest (Phase A)
 Run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/ingest.py`. Report the chunk/entity/triple counts.
@@ -39,7 +39,8 @@ Run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/ingest.py`. Report the chunk/entity/t
 ### 5. Derive + confirm wings (Phase B)
 Run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/ingest.py --derive-wings`. Show the proposed
 wing→room tree in a readable outline. Let the user rename / merge / split / accept by talking.
-Write the confirmed tree with `write_config.set_wings(...)`.
+Write the confirmed tree as JSON piped to the CLI:
+`echo '<json wing tree>' | PYTHONPYCACHEPREFIX=/tmp/mgpyc python3 ${CLAUDE_PLUGIN_ROOT}/scripts/write_config.py set-wings`
 
 ### 6. Assign (Phase C)
 Run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/ingest.py --assign-wings`. Report counts per wing.
