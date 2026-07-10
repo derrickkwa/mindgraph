@@ -64,8 +64,8 @@ def _plain_text(blocks: dict) -> str:
 
 
 def _title_of(page: dict) -> str:
-    for key, prop in page.get("properties", {}).items():
-        if prop.get("type") == "title" or key == "title":
+    for prop in page.get("properties", {}).values():
+        if prop.get("type") == "title" or isinstance(prop.get("title"), list):
             return "".join(t.get("plain_text", "") for t in prop.get("title", [])) or "Untitled"
     return "Untitled"
 
