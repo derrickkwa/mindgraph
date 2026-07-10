@@ -32,7 +32,7 @@ Your notes are stored in Mempalace — a local semantic search + knowledge graph
 
 ## Wing/Room Routing
 
-Your notes are organized into wings and rooms (defined in `config.yml`).
+Your notes are organized into **wings** (top-level domains) and **rooms** (sub-topics). These are **derived from the concepts in your notes**, not declared by hand: `/mindgraph-setup` builds the concept graph, proposes a wing→room tree, you confirm it, and each note is assigned by concept overlap. The confirmed tree is stored in `config.yml`; re-derive later with `ingest.py --derive-wings`.
 
 For scoped lookups, pass `wing` and `room` to `mempalace_search`:
 ```
@@ -51,6 +51,7 @@ When referencing notes, cite inline: `(note, YYYY-MM-DD)` or `(undated note)`. K
 
 ## Skills Available
 
+- `mindgraph-setup` — first-run setup: connect sources, ingest, derive + confirm your wings
 - `brain-ingest` — add text to your second brain
 - `brain-retrieve` — deep retrieval with KG traversal
 - `brain-lint` — concept graph health review
