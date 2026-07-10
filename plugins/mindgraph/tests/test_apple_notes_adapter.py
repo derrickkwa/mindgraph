@@ -1,8 +1,8 @@
 from adapters.apple_notes import _parse_export
 
 RAW = (
-    "NOTE\x1fWork\x1fMeeting notes\x1f2026-03-01\x1fDiscussed the funnel and churn.\x1e"
-    "NOTE\x1fPersonal\x1fJournal\x1f2026-03-02\x1fFelt good about habits today.\x1e"
+    "Work\x1fMeeting notes\x1f2026-03-01\x1fDiscussed the funnel and churn.\x1e"
+    "Personal\x1fJournal\x1f2026-03-02\x1fFelt good about habits today.\x1e"
 )
 
 

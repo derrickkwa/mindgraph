@@ -34,13 +34,10 @@ def _parse_export(raw: str) -> list[dict]:
     for chunk in raw.split(RECORD):
         if not chunk.strip():
             continue
-        parts = chunk.split(FIELD)
-        # Records are folder, title, date, body — but a leading record-type
-        # marker (e.g. "NOTE") may precede them, so keep only the last 4
-        # fields when more than 4 are present; pad on the right otherwise.
-        if len(parts) > 4:
-            parts = parts[-4:]
-        else:
+        # Records are folder, title, date, body. maxsplit=3 keeps any stray
+        # FIELD separator inside the body intact; pad on the right if short.
+        parts = chunk.split(FIELD, 3)
+        if len(parts) < 4:
             parts = parts + [""] * (4 - len(parts))
         folder, title, date, body = parts
         nid = hashlib.sha256((title + date).encode()).hexdigest()[:16]
