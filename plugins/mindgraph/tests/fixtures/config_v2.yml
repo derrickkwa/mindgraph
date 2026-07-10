@@ -1,0 +1,8 @@
+sources:
+  - {type: obsidian, path: ~/vault}
+llm_provider: auto
+wings:
+  - name: growth
+    rooms:
+      - {name: acquisition, concepts: [activation-friction, funnel-design]}
+defaults: {wing: inbox, room: general}

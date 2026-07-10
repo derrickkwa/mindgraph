@@ -1,0 +1,6 @@
+notes_folder: ~/Documents/my-notes
+llm_provider: auto
+wings:
+  - name: work
+    rooms:
+      projects: [work/projects/]
