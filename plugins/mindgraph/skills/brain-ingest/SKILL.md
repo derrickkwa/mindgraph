@@ -58,8 +58,10 @@ source_file: [source_file]
 ### 3. Fetch concept vocabulary
 
 ```python
-import sqlite3, os
-conn = sqlite3.connect(os.path.expanduser("~/.mempalace/knowledge_graph.sqlite3"))
+import sqlite3, sys
+sys.path.insert(0, "scripts")  # repo-root-relative; use the data-home resolver, not a hardcoded path
+from paths import kg_db_path
+conn = sqlite3.connect(str(kg_db_path()))
 conn.row_factory = sqlite3.Row
 rows = conn.execute("SELECT name FROM entities WHERE type='concept' ORDER BY name").fetchall()
 vocabulary = [r["name"] for r in rows]
@@ -79,14 +81,16 @@ python3 skills/brain-ingest/scripts/concept_extractor.py \
 ### 5. Write to KG
 
 ```python
-import json, os
+import json, sys
+sys.path.insert(0, "scripts")  # repo-root-relative; use the data-home resolver, not a hardcoded path
+from paths import kg_db_path
 from mempalace.knowledge_graph import KnowledgeGraph
 from datetime import date
 
 with open("/tmp/brain_ingest_results.json") as f:
     output = json.load(f)
 
-kg = KnowledgeGraph()
+kg = KnowledgeGraph(db_path=str(kg_db_path()))
 today = date.today().isoformat()
 
 for result in output["results"]:
