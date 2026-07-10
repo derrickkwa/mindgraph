@@ -1,0 +1,6 @@
+{
+  "name": "mindgraph",
+  "version": "0.2.0",
+  "description": "Second brain on Mempalace — multi-source ingest, concept graph, intelligent wings.",
+  "author": { "name": "derrickkwa" }
+}

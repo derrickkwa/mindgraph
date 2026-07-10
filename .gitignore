@@ -6,4 +6,5 @@ __pycache__/
 *.egg-info/
 dist/
 .DS_Store
-skills/brain-ingest/scripts/batch_ingest_checkpoint.json
+plugins/mindgraph/skills/brain-ingest/scripts/batch_ingest_checkpoint.json
+.superpowers/

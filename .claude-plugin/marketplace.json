@@ -1,0 +1,11 @@
+{
+  "name": "mindgraph",
+  "owner": { "name": "derrickkwa" },
+  "plugins": [
+    {
+      "name": "mindgraph",
+      "source": "./plugins/mindgraph",
+      "description": "A Claude Code second brain: multi-source ingest, concept graph, and concept-derived wings."
+    }
+  ]
+}
