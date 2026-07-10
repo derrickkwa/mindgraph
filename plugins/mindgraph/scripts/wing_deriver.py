@@ -56,7 +56,6 @@ def assign(concepts_by_note: dict, wings: list) -> dict:
 
 
 def apply(assignments: dict, col, kg) -> None:
-    import sqlite3
     for source_file, wr in assignments.items():
         # ChromaDB: update metadata on all chunks of this note
         got = col.get(where={"source_file": source_file})

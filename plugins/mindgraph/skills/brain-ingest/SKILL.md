@@ -59,7 +59,7 @@ source_file: [source_file]
 
 ```python
 import sqlite3, sys
-sys.path.insert(0, "scripts")  # repo-root-relative; use the data-home resolver, not a hardcoded path
+sys.path.insert(0, "${CLAUDE_PLUGIN_ROOT}/scripts")  # use the data-home resolver, not a hardcoded path
 from paths import kg_db_path
 conn = sqlite3.connect(str(kg_db_path()))
 conn.row_factory = sqlite3.Row
@@ -73,7 +73,7 @@ conn.close()
 ```bash
 echo '[{"id":"...","text":"...","source_file":"...","wing":"...","room":"..."}]' > /tmp/brain_ingest_chunks.json
 
-python3 skills/brain-ingest/scripts/concept_extractor.py \
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/brain-ingest/scripts/concept_extractor.py \
   --chunks-file /tmp/brain_ingest_chunks.json \
   > /tmp/brain_ingest_results.json
 ```
@@ -82,7 +82,7 @@ python3 skills/brain-ingest/scripts/concept_extractor.py \
 
 ```python
 import json, sys
-sys.path.insert(0, "scripts")  # repo-root-relative; use the data-home resolver, not a hardcoded path
+sys.path.insert(0, "${CLAUDE_PLUGIN_ROOT}/scripts")  # use the data-home resolver, not a hardcoded path
 from paths import kg_db_path
 from mempalace.knowledge_graph import KnowledgeGraph
 from datetime import date

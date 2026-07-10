@@ -27,7 +27,7 @@ class ObsidianAdapter(MarkdownAdapter):
                 continue
             rel = md_file.relative_to(folder)
             fm, body = _parse_frontmatter(md_file.read_text(encoding="utf-8"))
-            links = _WIKILINK.findall(body)
+            links = [link.split("|")[0] for link in _WIKILINK.findall(body)]
             body = _WIKILINK.sub(lambda m: m.group(1).split("|")[0], body)
             title = fm.get("title", md_file.stem.replace("-", " ").title())
             filed_at = _parse_date(fm.get("date"), md_file)

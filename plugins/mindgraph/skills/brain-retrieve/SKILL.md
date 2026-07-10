@@ -29,7 +29,7 @@ Check `_wiki/index.md` for a matching page. If one exists, read it via the Read 
 
 ```python
 import sqlite3, sys
-sys.path.insert(0, "scripts")  # repo-root-relative; use the data-home resolver, not a hardcoded path
+sys.path.insert(0, "${CLAUDE_PLUGIN_ROOT}/scripts")  # use the data-home resolver, not a hardcoded path
 from paths import kg_db_path
 conn = sqlite3.connect(str(kg_db_path()))
 conn.row_factory = sqlite3.Row

@@ -25,7 +25,7 @@ Concept graph maintenance. Runs `brain_lint.py`, presents findings grouped by ac
 ### 1. Run the lint script
 
 ```bash
-python3 skills/brain-lint/scripts/brain_lint.py \
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/brain-lint/scripts/brain_lint.py \
   --wiki-dir _wiki \
   --top-gaps 20 \
   --min-links 3 \
@@ -56,7 +56,7 @@ Count + 10-item sample only.
 ```python
 import sqlite3, sys
 from datetime import date
-sys.path.insert(0, "scripts")  # repo-root-relative; use the data-home resolver, not a hardcoded path
+sys.path.insert(0, "${CLAUDE_PLUGIN_ROOT}/scripts")  # use the data-home resolver, not a hardcoded path
 from paths import kg_db_path
 conn = sqlite3.connect(str(kg_db_path()))
 keep, remove = "canonical-concept", "duplicate-concept"
@@ -70,7 +70,7 @@ conn.close()
 ```python
 import sqlite3, sys
 from datetime import date
-sys.path.insert(0, "scripts")  # repo-root-relative; use the data-home resolver, not a hardcoded path
+sys.path.insert(0, "${CLAUDE_PLUGIN_ROOT}/scripts")  # use the data-home resolver, not a hardcoded path
 from paths import kg_db_path
 conn = sqlite3.connect(str(kg_db_path()))
 concept = "[CONCEPT_TO_PRUNE]"

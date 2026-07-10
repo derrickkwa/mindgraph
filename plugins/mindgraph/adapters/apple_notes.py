@@ -69,7 +69,9 @@ class AppleNotesAdapter(AdapterBase):
 
 
 if __name__ == "__main__":
-    argparse.ArgumentParser().parse_args()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--test", action="store_true")
+    ap.parse_args()
     got = AppleNotesAdapter().fetch({"type": "apple_notes"})[:5]
     print(f"Fetched {len(got)} sample chunks")
     if got:
