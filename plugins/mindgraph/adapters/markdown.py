@@ -2,11 +2,14 @@
 """
 markdown.py — Plain markdown adapter for MindGraph.
 
-Reads .md files from notes_folder, routes to wings/rooms via config.yml
-folder mappings, parses frontmatter, and chunks content.
+Reads .md files from a single source {type, path}, emits every chunk into
+the inbox wing ("general" room) with a namespaced source_file
+("{SOURCE_TYPE}:{relpath}"). Wing/room routing is decided downstream
+(by triage), not by the adapter.
 
-Usage (test mode):
-    python adapters/markdown.py --test --config config.yml
+Usage:
+    python adapters/markdown.py --path ~/notes
+    python adapters/markdown.py --config config.yml
 """
 
 import argparse
@@ -25,53 +28,30 @@ CHUNK_OVERLAP_CHARS = 200
 
 
 class MarkdownAdapter(AdapterBase):
-    def fetch(self, config: dict) -> list[dict]:
-        notes_folder = Path(config["notes_folder"]).expanduser()
-        if not notes_folder.exists():
-            raise FileNotFoundError(f"notes_folder not found: {notes_folder}")
+    SOURCE_TYPE = "markdown"
 
-        mappings = _build_mappings(config["wings"])
-        default_wing = config["defaults"]["wing"]
-        default_room = config["defaults"]["room"]
+    def fetch(self, source: dict) -> list[dict]:
+        folder = Path(source["path"]).expanduser()
+        if not folder.exists():
+            raise FileNotFoundError(f"source path not found: {folder}")
 
         chunks = []
-        for md_file in sorted(notes_folder.rglob("*.md")):
-            rel = md_file.relative_to(notes_folder)
-            wing, room = _route(str(rel), mappings, default_wing, default_room)
+        for md_file in sorted(folder.rglob("*.md")):
+            rel = md_file.relative_to(folder)
             frontmatter, body = _parse_frontmatter(md_file.read_text(encoding="utf-8"))
-
             title = frontmatter.get("title", md_file.stem.replace("-", " ").title())
             filed_at = _parse_date(frontmatter.get("date"), md_file)
-
             for chunk_text in _chunk(body):
                 chunks.append({
                     "text": chunk_text,
-                    "source_file": str(rel),
-                    "wing": wing,
-                    "room": room,
+                    "source_file": f"{self.SOURCE_TYPE}:{rel}",
+                    "wing": "inbox",
+                    "room": "general",
                     "filed_at": filed_at,
                     "title": title,
                     "tags": frontmatter.get("tags", []),
                 })
         return chunks
-
-
-def _build_mappings(wings: list[dict]) -> list[tuple[str, str, str]]:
-    """Returns [(folder_prefix, wing, room)] sorted longest-first for greedy match."""
-    mappings = []
-    for wing_def in wings:
-        wing_name = wing_def["name"]
-        for room_name, folders in wing_def.get("rooms", {}).items():
-            for folder in folders:
-                mappings.append((folder.rstrip("/"), wing_name, room_name))
-    return sorted(mappings, key=lambda x: len(x[0]), reverse=True)
-
-
-def _route(rel_path: str, mappings: list, default_wing: str, default_room: str) -> tuple[str, str]:
-    for prefix, wing, room in mappings:
-        if rel_path.startswith(prefix):
-            return wing, room
-    return default_wing, default_room
 
 
 def _parse_frontmatter(text: str) -> tuple[dict, str]:
@@ -138,18 +118,28 @@ def _chunk(text: str) -> list[str]:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", default="config.yml")
-    parser.add_argument("--test", action="store_true")
+    parser.add_argument("--path", default=None, help="Path to a markdown notes folder")
+    parser.add_argument("--config", default="config.yml", help="Used only if --path is omitted")
     args = parser.parse_args()
 
-    sys.path.insert(0, str(Path(__file__).parent.parent))
-    from scripts.config import load_config
+    if args.path:
+        source = {"type": "markdown", "path": args.path}
+    else:
+        sys.path.insert(0, str(Path(__file__).parent.parent))
+        from scripts.config import load_config
 
-    config = load_config(args.config)
+        config = load_config(args.config)
+        source = next(
+            (s for s in config["sources"] if s.get("type") in ("markdown", "obsidian")),
+            None,
+        )
+        if source is None:
+            raise SystemExit("No markdown/obsidian source found in config.yml; pass --path instead.")
+
     adapter = MarkdownAdapter()
-    chunks = adapter.fetch(config)
+    chunks = adapter.fetch(source)
 
-    print(f"Found {len(chunks)} chunks from {config['notes_folder']}")
+    print(f"Found {len(chunks)} chunks from {source['path']}")
     if chunks:
         print("\nSample chunk:")
         print(json.dumps(chunks[0], indent=2, default=str))
