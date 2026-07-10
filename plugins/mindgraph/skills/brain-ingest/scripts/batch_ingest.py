@@ -134,7 +134,7 @@ def add_to_chromadb(col, chunks: list[dict]) -> int:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--chunks-file")
-    parser.add_argument("--config", default="config.yml")
+    parser.add_argument("--config", default=None)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--reset", action="store_true")
     parser.add_argument("--status", action="store_true")
@@ -146,9 +146,9 @@ def main():
         CHECKPOINT_FILE.unlink()
         print("[RESET] Checkpoint cleared.", file=sys.stderr)
 
-    repo_root = Path(__file__).parent.parent.parent.parent
-    sys.path.insert(0, str(repo_root / "scripts"))
-    from config import load_config
+    repo_root = Path(__file__).resolve().parent.parent.parent.parent
+    sys.path.insert(0, str(repo_root))
+    from scripts.config import load_config
     config = load_config(args.config)
 
     if args.status:
