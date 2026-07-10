@@ -8,7 +8,6 @@ def test_resolves_bundled_markdown():
     assert isinstance(get_adapter("markdown"), MarkdownAdapter)
 
 
-@pytest.mark.xfail(reason="obsidian adapter lands in Task 8", strict=False)
 def test_obsidian_is_markdown_subclass():
     from adapters.obsidian import ObsidianAdapter
     assert isinstance(get_adapter("obsidian"), ObsidianAdapter)
