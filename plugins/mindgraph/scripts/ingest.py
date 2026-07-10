@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT))
 
 from scripts.config import load_config
 from scripts.adapter_registry import get_adapter
+from scripts.paths import kg_db_path
 
 BATCH = ROOT / "skills/brain-ingest/scripts/batch_ingest.py"
 
@@ -27,9 +28,8 @@ def _fetch_all(config) -> list:
 
 def _concepts_by_note() -> dict:
     """Read expressed concepts per source_file from the KG."""
-    import os, sqlite3
-    db = os.path.expanduser("~/.mempalace/knowledge_graph.sqlite3")
-    conn = sqlite3.connect(db)
+    import sqlite3
+    conn = sqlite3.connect(str(kg_db_path()))
     rows = conn.execute(
         "SELECT source_file, object FROM triples WHERE predicate='expresses'").fetchall()
     conn.close()

@@ -28,8 +28,10 @@ Check `_wiki/index.md` for a matching page. If one exists, read it via the Read 
 ### 2. KG concept lookup
 
 ```python
-import sqlite3, os
-conn = sqlite3.connect(os.path.expanduser("~/.mempalace/knowledge_graph.sqlite3"))
+import sqlite3, sys
+sys.path.insert(0, "scripts")  # repo-root-relative; use the data-home resolver, not a hardcoded path
+from paths import kg_db_path
+conn = sqlite3.connect(str(kg_db_path()))
 conn.row_factory = sqlite3.Row
 query_term = "[USER_QUERY_NORMALISED]"  # lowercase, hyphenated
 
@@ -85,5 +87,5 @@ If a concept has 20+ KG sources but no wiki page, note: "Worth synthesising — 
 ## Files
 
 - `_wiki/` — synthesised pages (check first)
-- `~/.mempalace/palace/` — ChromaDB semantic search
-- `~/.mempalace/knowledge_graph.sqlite3` — concept graph
+- `palace_dir()` (via `scripts/paths.py`) — ChromaDB semantic search, under `$MINDGRAPH_HOME` (defaults to `~/.mempalace/palace`)
+- `kg_db_path()` (via `scripts/paths.py`) — concept graph, under `$MINDGRAPH_HOME` (defaults to `~/.mempalace/knowledge_graph.sqlite3`)

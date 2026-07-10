@@ -17,6 +17,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 
+sys.path.insert(0, str(Path(__file__).parent))
+from paths import palace_dir
+
 
 def run(cmd: list[str], check: bool = True, capture: bool = False) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, check=check, capture_output=capture, text=True)
@@ -38,13 +41,14 @@ def install_mempalace():
 
 def init_mempalace():
     print("\n[2/5] Initializing palace...")
-    palace_path = Path.home() / ".mempalace"
-    if palace_path.exists():
-        print("     ✓ palace already initialized")
+    palace_path = palace_dir()
+    os.environ["MEMPALACE_PALACE_PATH"] = str(palace_path)
+    if any(palace_path.iterdir()):
+        print(f"     ✓ palace already initialized at {palace_path}")
         return
     try:
         run(["mempalace", "init"])
-        print("     ✓ palace initialized at ~/.mempalace")
+        print(f"     ✓ palace initialized at {palace_path}")
     except Exception:
         print("     ✓ palace path created")
         palace_path.mkdir(parents=True, exist_ok=True)

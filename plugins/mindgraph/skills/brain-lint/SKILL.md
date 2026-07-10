@@ -54,9 +54,11 @@ Count + 10-item sample only.
 
 **Merge:**
 ```python
-import sqlite3, os
+import sqlite3, sys
 from datetime import date
-conn = sqlite3.connect(os.path.expanduser("~/.mempalace/knowledge_graph.sqlite3"))
+sys.path.insert(0, "scripts")  # repo-root-relative; use the data-home resolver, not a hardcoded path
+from paths import kg_db_path
+conn = sqlite3.connect(str(kg_db_path()))
 keep, remove = "canonical-concept", "duplicate-concept"
 conn.execute("UPDATE triples SET object=? WHERE object=? AND predicate='expresses'", (keep, remove))
 conn.execute("UPDATE entities SET valid_to=? WHERE name=? AND type='concept'", (date.today().isoformat(), remove))
@@ -66,9 +68,11 @@ conn.close()
 
 **Prune:**
 ```python
-import sqlite3, os
+import sqlite3, sys
 from datetime import date
-conn = sqlite3.connect(os.path.expanduser("~/.mempalace/knowledge_graph.sqlite3"))
+sys.path.insert(0, "scripts")  # repo-root-relative; use the data-home resolver, not a hardcoded path
+from paths import kg_db_path
+conn = sqlite3.connect(str(kg_db_path()))
 concept = "[CONCEPT_TO_PRUNE]"
 conn.execute("UPDATE entities SET valid_to=? WHERE name=? AND type='concept'", (date.today().isoformat(), concept))
 conn.execute("UPDATE triples SET valid_to=? WHERE object=? AND predicate='expresses'", (date.today().isoformat(), concept))

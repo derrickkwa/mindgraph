@@ -26,7 +26,7 @@ sys.path.insert(0, str(SCRIPT_DIR))
 from concept_extractor import extract_concepts_batched, get_provider
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
-from paths import checkpoints_dir, env_path
+from paths import checkpoints_dir, env_path, palace_dir, kg_db_path
 
 CHECKPOINT_FILE = checkpoints_dir() / "batch_ingest_checkpoint.json"
 
@@ -48,14 +48,13 @@ _load_env()
 
 def get_chromadb_collection():
     import chromadb
-    palace_path = os.path.expanduser("~/.mempalace/palace")
-    client = chromadb.PersistentClient(path=palace_path)
+    client = chromadb.PersistentClient(path=str(palace_dir()))
     return client.get_or_create_collection("mempalace_drawers")
 
 
 def get_kg():
     from mempalace.knowledge_graph import KnowledgeGraph
-    return KnowledgeGraph()
+    return KnowledgeGraph(db_path=str(kg_db_path()))
 
 
 def load_checkpoint() -> dict:
@@ -74,7 +73,7 @@ def save_checkpoint(state: dict):
 
 def fetch_existing_concepts(kg) -> list[str]:
     import sqlite3
-    conn = sqlite3.connect(os.path.expanduser("~/.mempalace/knowledge_graph.sqlite3"))
+    conn = sqlite3.connect(str(kg_db_path()))
     conn.row_factory = sqlite3.Row
     rows = conn.execute("SELECT name FROM entities WHERE type='concept' ORDER BY name").fetchall()
     conn.close()

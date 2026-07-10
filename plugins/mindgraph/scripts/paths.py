@@ -34,3 +34,11 @@ def adapters_dir() -> Path:
 
 def checkpoints_dir() -> Path:
     return _subdir("checkpoints")
+
+
+def palace_dir() -> Path:
+    return _subdir("palace")
+
+
+def kg_db_path() -> Path:
+    return data_home() / "knowledge_graph.sqlite3"

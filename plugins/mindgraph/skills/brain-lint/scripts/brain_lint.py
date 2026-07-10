@@ -19,11 +19,14 @@ import os
 import json
 import argparse
 import re
+import sys
 from pathlib import Path
 from difflib import SequenceMatcher
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
+from paths import kg_db_path
 
-KG_PATH = os.path.expanduser("~/.mempalace/knowledge_graph.sqlite3")
+KG_PATH = str(kg_db_path())
 DEFAULT_WIKI_DIR = "_wiki"
 DEFAULT_MIN_LINKS = 3
 DEFAULT_TOP_GAPS = 20
