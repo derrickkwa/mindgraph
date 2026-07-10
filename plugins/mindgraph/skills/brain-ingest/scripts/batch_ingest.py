@@ -21,30 +21,26 @@ from datetime import date
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent
-CHECKPOINT_FILE = SCRIPT_DIR / "batch_ingest_checkpoint.json"
 
 sys.path.insert(0, str(SCRIPT_DIR))
 from concept_extractor import extract_concepts_batched, get_provider
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
+from paths import checkpoints_dir, env_path
+
+CHECKPOINT_FILE = checkpoints_dir() / "batch_ingest_checkpoint.json"
+
 
 def _load_env():
-    search = SCRIPT_DIR
-    for _ in range(8):
-        env = search / ".env"
-        if env.is_file():
-            with open(env) as f:
-                for line in f:
-                    line = line.strip()
-                    if not line or line.startswith("#") or "=" not in line:
-                        continue
-                    k, _, v = line.partition("=")
-                    if k.strip() and k.strip() not in os.environ:
-                        os.environ[k.strip()] = v.strip()
-            return
-        parent = search.parent
-        if parent == search:
-            break
-        search = parent
+    env = env_path()
+    if env.is_file():
+        for line in env.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, _, v = line.partition("=")
+            if k.strip() and k.strip() not in os.environ:
+                os.environ[k.strip()] = v.strip()
 
 
 _load_env()

@@ -37,25 +37,20 @@ def _get_ssl_context():
 
 SSL_CTX = _get_ssl_context()
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
+from paths import env_path
+
 
 def _load_dotenv():
-    search_dir = Path(__file__).resolve().parent
-    for _ in range(8):
-        env_path = search_dir / ".env"
-        if env_path.is_file():
-            with open(env_path) as f:
-                for line in f:
-                    line = line.strip()
-                    if not line or line.startswith("#") or "=" not in line:
-                        continue
-                    key, _, value = line.partition("=")
-                    if key.strip() and key.strip() not in os.environ:
-                        os.environ[key.strip()] = value.strip()
-            return
-        parent = search_dir.parent
-        if parent == search_dir:
-            break
-        search_dir = parent
+    env = env_path()
+    if env.is_file():
+        for line in env.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            if key.strip() and key.strip() not in os.environ:
+                os.environ[key.strip()] = value.strip()
 
 
 _load_dotenv()

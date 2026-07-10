@@ -8,3 +8,4 @@ dist/
 .DS_Store
 plugins/mindgraph/skills/brain-ingest/scripts/batch_ingest_checkpoint.json
 .superpowers/
+checkpoints/
