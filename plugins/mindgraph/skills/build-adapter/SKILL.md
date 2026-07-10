@@ -10,7 +10,7 @@ triggers:
 
 # build-adapter
 
-Generates a complete, working adapter for any note source. Asks targeted questions, researches the API, and writes `adapters/[source].py` implementing `AdapterBase`.
+Generates a complete, working adapter for any note source. Asks targeted questions, researches the API, and writes `~/.mempalace/adapters/[source].py` implementing `AdapterBase` (the plugin dir is read-only at runtime — never write inside `${CLAUDE_PLUGIN_ROOT}`).
 
 ## Steps
 
@@ -37,37 +37,45 @@ Use `WebSearch` to find official API docs or file format specs. Use `WebFetch` t
 
 ### 3. Generate the adapter
 
-Write `adapters/[source_slug].py` inheriting `AdapterBase`:
+Write `~/.mempalace/adapters/[source_slug].py` inheriting `AdapterBase`:
 
 ```python
 from adapters.base import AdapterBase
 from adapters.markdown import _chunk  # reuse chunking logic
 
 class [Source]Adapter(AdapterBase):
+    SOURCE_TYPE = "[source_slug]"
+
     def fetch(self, config: dict) -> list[dict]:
         """Returns chunks conforming to the AdapterBase contract."""
         # Load credentials from environment
         # Fetch all items with pagination
-        # Route wing/room from config["wings"] mappings
         # Chunk long texts using _chunk()
         # Return list of dicts with: text, source_file, wing, room, filed_at
 ```
 
 Requirements:
 - Must inherit `AdapterBase` and implement `fetch()`
-- Wing/room routing must use config mappings — never hardcode
+- Every chunk must set `wing="inbox"`, `room="general"` — the adapter never
+  decides final routing. Wings/rooms are derived later from the concept
+  graph (Phase B of ingest) and confirmed by the user; adapters only produce
+  provisional inbox chunks.
+- `source_file` must be `"<source_slug>:<id>"` (e.g. `"notion:page-abc123"`,
+  `"obsidian:daily/2026-07-10.md"`) — a stable, namespaced identifier so
+  chunks from different sources never collide.
 - Must handle pagination until all items are fetched
 - Must handle rate limits (429 → exponential backoff)
 - Must parse dates into `YYYY-MM-DD`
 - Must chunk long texts using `_chunk()` from `adapters/markdown.py`
-- Must load credentials from `.env` using the inline dotenv loader pattern from `concept_extractor.py`
+- Must load credentials from `~/.mempalace/.env` using the inline dotenv
+  loader pattern from `concept_extractor.py`
 - Must include a `--test` CLI flag that fetches up to 5 items and prints a sample chunk
 
 ### 4. Verify
 
 Run test mode:
 ```bash
-python adapters/[source_slug].py --test --config config.yml
+python3 ~/.mempalace/adapters/[source_slug].py --test
 ```
 
 Fix any errors before reporting done.
@@ -75,9 +83,9 @@ Fix any errors before reporting done.
 ### 5. Report
 
 Tell the user:
-- Adapter file created: `adapters/[source_slug].py`
-- Env vars to add to `.env`
-- How to ingest: `python scripts/ingest.py` (no other changes needed)
+- Adapter file created: `~/.mempalace/adapters/[source_slug].py`
+- Env vars to add to `~/.mempalace/.env`
+- How to ingest: re-run `/mindgraph-setup` or `ingest.py` (no other changes needed)
 - Any limitations discovered (rate limits, content types unavailable, etc.)
 
 ## Adapter contract reference
