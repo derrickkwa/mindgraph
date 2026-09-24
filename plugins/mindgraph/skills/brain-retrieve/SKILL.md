@@ -84,6 +84,20 @@ Weave findings into your response — don't dump raw chunks.
 
 If a concept has 20+ KG sources but no wiki page, note: "Worth synthesising — [N] sources but no wiki page yet."
 
+### Prior conclusions (memory wing)
+
+Run one extra scoped search: `mempalace_search(query, wing="memory", limit=5)`. These are Claude's own saved conclusions from Claude Code memory, not notes. Show them in a separate **Prior conclusions** block; never merge them into ranking, dedup, or the FORK gate. For each hit, `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/belief_ledger.py --by-memory-file <filename>` — if the entry has a `revised` history line, add "revised YYYY-MM-DD".
+
+### FORK — counter-pressure
+
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consensus_gate.py --query "<the user's query>"
+```
+
+If `is_tight` is false, stop. Otherwise resolve a concept key (matched KG concept name, else the topic slugified) and check `belief_ledger.py --get "<key>"`; if `in_cooldown`, stop. Otherwise read the retrieved notes: only if they share a *stance* (not merely a topic), add exactly one line — `⚠ Your notes all lean [X]. Strongest case against: [one sentence].` — then `belief_ledger.py --log-surfaced --concept '<key>' --stance '<X>' --counter '<case>' --belief '<belief>'` (single-quote arguments; `$` is otherwise lost).
+
+Ledger questions: "what have I changed my mind about" → `--list flipped`; "what do I hold but never tested" → `--list untested`; a belief's history → `--history '<key>'`.
+
 ## Files
 
 - `_wiki/` — synthesised pages (check first)

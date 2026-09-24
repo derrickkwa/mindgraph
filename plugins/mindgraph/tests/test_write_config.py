@@ -52,3 +52,13 @@ def test_cli_set_wings_runs_as_a_direct_subprocess(tmp_path, monkeypatch):
     assert "wrote 1 wings" in result.stdout
     cfg = yaml.safe_load((tmp_path / "config.yml").read_text())
     assert cfg["wings"][0]["name"] == "growth"
+
+
+def test_set_memory_merges(tmp_path, monkeypatch):
+    monkeypatch.setenv("MINDGRAPH_HOME", str(tmp_path))
+    (tmp_path / "config.yml").write_text("sources: []\n")
+    import importlib, scripts.paths, scripts.write_config as wc
+    importlib.reload(scripts.paths); importlib.reload(wc)
+    wc.set_memory({"sync_hook": True})
+    import yaml
+    assert yaml.safe_load((tmp_path / "config.yml").read_text())["memory"] == {"sync_hook": True}

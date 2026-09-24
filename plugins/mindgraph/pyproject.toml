@@ -1,9 +1,10 @@
 [project]
 name = "mindgraph"
-version = "0.2.0"
+version = "0.3.0"
 description = "Second brain on Mempalace — multi-source ingest, concept graph, intelligent wings."
 requires-python = ">=3.11"
-dependencies = ["pyyaml>=6.0"]
+license = {file = "LICENSE"}
+dependencies = ["pyyaml>=6.0", "chromadb>=0.6", "numpy"]
 
 [build-system]
 requires = ["hatchling"]

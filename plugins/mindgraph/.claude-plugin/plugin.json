@@ -1,6 +1,7 @@
 {
   "name": "mindgraph",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Second brain on Mempalace — multi-source ingest, concept graph, intelligent wings.",
-  "author": { "name": "derrickkwa" }
+  "author": { "name": "derrickkwa" },
+  "license": "PolyForm-Noncommercial-1.0.0"
 }

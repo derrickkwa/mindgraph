@@ -133,6 +133,33 @@ The vocabulary grows with your notes. The more you ingest, the richer the graph 
 
 ---
 
+## Memory layer
+
+MindGraph can optionally sync your Claude Code auto-memory files (`MEMORY.md`
+and its topic hubs) into the palace as their own wing, so past conclusions
+are retrievable alongside your notes. It's opt-in — `/mindgraph-setup` asks
+once, in step 6b, and turning it on installs nothing new; it just enables a
+hook that runs after file edits and exits immediately unless the edited file
+is a memory file. `MEMORY.md`, its topic hubs (`hub_*.md`), and `archive.md`
+are excluded from sync — only the memory files a hub points to are synced.
+`MEMORY.md` itself has a hard load ceiling in every
+session, so the pattern that keeps it small — an admission test, topic hubs,
+and a belief ledger for superseded verdicts — is documented in
+[`docs/memory-index.md`](docs/memory-index.md).
+
+## FORK — counter-pressure
+
+A personal note store is curated by resonance: you write down what struck
+you, so retrieval over it tends to confirm what you already believed. FORK
+runs automatically on every `brain-retrieve` call to correct for that — a
+cheap dispersion check gates on whether retrieved sources are unusually
+tight, a stance read asks whether they share a position (not just a topic),
+and when they do, one labelled line of steelman is surfaced against it. A
+belief ledger tracks state over time and only lets a belief reach `solid` by
+surviving a real external source, never its own steelman. See
+[`docs/lessons.md`](docs/lessons.md) for the full design and what it cost to
+build.
+
 ## Requirements
 
 - Python 3.11+
@@ -210,4 +237,8 @@ never touch a real `~/.mempalace` implicitly.
 
 ## License
 
-MIT
+MindGraph 0.3.0 and later is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE): free for personal use, research, and other noncommercial purposes. Commercial use requires a separate license — open an issue or contact [@derrickkwa](https://github.com/derrickkwa).
+
+Versions 0.2.0 and earlier were released under the MIT License and remain available under those terms.
+
+MindGraph builds on [Mempalace](https://github.com/mempalace/mempalace) (MIT), which it uses as an installed dependency.

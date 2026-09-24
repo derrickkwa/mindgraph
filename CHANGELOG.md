@@ -2,6 +2,23 @@
 
 All notable changes to MindGraph are documented here.
 
+## [0.3.0] — 2026-09-24
+
+The memory layer and FORK were developed in the author's private second brain between July and September 2026, and are first published here on 2026-09-24.
+
+### Added
+
+- **Claude Code memory sync + opt-in hook.** `memory_sync.py` mirrors per-project Claude Code auto-memory files into a dedicated `memory` wing in the palace, so past conclusions are retrievable alongside notes. Off by default; `/mindgraph-setup` step 6b asks once, and enabling it turns on a hook that runs after file edits and exits immediately unless the edited file is a memory file. `MEMORY.md` itself is excluded from sync.
+- **Memory lint (`brain-lint` / `memory_lint.py`).** Audits Claude Code memory files across projects: flags `MEMORY.md` size against its load ceiling, checks every memory file is reachable from `MEMORY.md` directly or via one topic hub, and can fix near-miss `[[links]]` with `--fix-near-matches`.
+- **Belief ledger (`belief_ledger.py`).** An append-only event log of conclusions and their revisions. Records a conclusion once, records later revisions as `reversal` or `refinement` with an effective date and reason, and replays a belief's full history with `--history`. Supports per-claim sub-keys (`<file>--<claim>`) for memory files that carry several verdicts.
+- **Consensus gate with query mode (`consensus_gate.py`).** A cheap dispersion score over retrieved source files that gates whether FORK's stance read runs at all — spread sources short-circuit with no model call. Excludes the `memory` wing from its count so a system's own summaries never vote as extra agreement.
+- **FORK counter-pressure in `brain-retrieve`.** On a tight, stance-sharing retrieval, surfaces one labelled line of steelman against the notes' position and logs it to the belief ledger (no confidence change) unless the belief is in cooldown. Also surfaces "prior conclusions" (memory-wing hits) as a separate line from note evidence.
+- **Docs.** `docs/memory-index.md` (the admission test, topic hubs, and belief-ledger pattern that keeps `MEMORY.md` small) and `docs/lessons.md` (architecture, write path, wiki-as-cache, read path, FORK, and lessons from running the system).
+
+### Changed
+
+- **License → [PolyForm Noncommercial License 1.0.0](LICENSE), effective 0.3.0.** Versions 0.2.0 and earlier remain available under MIT.
+
 ## [0.2.0] — 2026-07-10
 
 A ground-up repackaging: MindGraph goes from a "clone-and-run" template to an installable **Claude Code plugin**, and wing/room organization becomes **concept-derived** instead of folder-declared.

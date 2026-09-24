@@ -59,6 +59,18 @@ When referencing notes, cite inline: `(note, YYYY-MM-DD)` or `(undated note)`. K
 
 ---
 
+## Scripts & Hooks
+
+- `scripts/belief_ledger.py` — FORK belief ledger: log surfaced counter-pressure, record tests/conclusions/revisions, query cooldown and history
+- `scripts/consensus_gate.py` — checks whether retrieved sources are too topically/stance-tight to skip counter-pressure
+- `scripts/memory_sync.py` — syncs Claude Code memory files into MindGraph (`--all | --project | --file | --hook`)
+- `skills/brain-lint/scripts/memory_lint.py` — Claude Code memory index health check (`--check-sync`, `--fix-near-matches`)
+- `hooks/hooks.json` — PostToolUse hook running `memory_sync.py --hook` after Write/Edit/MultiEdit, opt-in via `mindgraph-setup` step 6b
+- `docs/memory-index.md` — memory index rules, admission test, topic hubs, belief ledger revisions
+- `docs/lessons.md` — architecture, write/read paths, wiki-as-cache, FORK, and lessons learned
+
+---
+
 ## TODO: Personalize This File
 
 Replace this section with context specific to you:

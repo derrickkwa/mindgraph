@@ -80,7 +80,16 @@ conn.commit()
 conn.close()
 ```
 
+### 4. Memory lint (Claude Code memory)
+
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/brain-lint/scripts/memory_lint.py --check-sync
+```
+
+Per project: report errors first (`index_size` → move non-rule lines into a hub; `unreachable` → add the file's line to a hub; `near_match_link` → offer `--fix-near-matches`), then warnings (`dangling_link` list only; `sync_missing`/`sync_orphan`/`sync_vector_missing` → run `memory_sync.py --all`). Method: `docs/memory-index.md` in the MindGraph repo (https://github.com/derrickkwa/mindgraph/blob/main/docs/memory-index.md).
+
 ## Files
 
 - `skills/brain-lint/scripts/brain_lint.py` — the lint script
+- `skills/brain-lint/scripts/memory_lint.py` — Claude Code memory index health check
 - `_wiki/` — wiki pages checked for orphans and gaps

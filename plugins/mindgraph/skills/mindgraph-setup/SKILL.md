@@ -45,5 +45,15 @@ Write the confirmed tree as JSON piped to the CLI:
 ### 6. Assign (Phase C)
 Run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/ingest.py --assign-wings`. Report counts per wing.
 
+### 6b. Claude Code memory (optional)
+Ask: "Sync your Claude Code memory files into MindGraph so past conclusions are searchable? This installs nothing new — it turns on a hook that runs after file edits and exits immediately unless the edited file is a Claude Code memory file."
+On yes:
+```bash
+echo '{"sync_hook": true}' | PYTHONPYCACHEPREFIX=/tmp/mgpyc python3 ${CLAUDE_PLUGIN_ROOT}/scripts/write_config.py set-memory
+PYTHONPYCACHEPREFIX=/tmp/mgpyc python3 ${CLAUDE_PLUGIN_ROOT}/scripts/memory_sync.py --all
+```
+Explain the index rule in two sentences (a line belongs in `MEMORY.md` only if missing it would cause a wrong action and you wouldn't think to look it up first; everything else goes in its topic hub) and point to `docs/memory-index.md` in the MindGraph repo (https://github.com/derrickkwa/mindgraph/blob/main/docs/memory-index.md). Note: restart Claude Code after the first bulk sync so the search server sees the new wing.
+On no: skip.
+
 ### 7. Done
 Suggest: "Ask me: 'what do my notes say about <topic>?'" (uses the brain-retrieve skill).

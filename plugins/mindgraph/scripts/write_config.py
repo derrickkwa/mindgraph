@@ -38,9 +38,17 @@ def set_wings(wings: list) -> None:
     _write(cfg)
 
 
+def set_memory(data: dict) -> None:
+    cfg = read()
+    memory = dict(cfg.get("memory") or {})
+    memory.update(data)
+    cfg["memory"] = memory
+    _write(cfg)
+
+
 def _main() -> None:
-    if len(sys.argv) < 2 or sys.argv[1] not in ("set-sources", "set-wings"):
-        print("usage: write_config.py <set-sources|set-wings> (JSON list on stdin)",
+    if len(sys.argv) < 2 or sys.argv[1] not in ("set-sources", "set-wings", "set-memory"):
+        print("usage: write_config.py <set-sources|set-wings|set-memory> (JSON on stdin)",
               file=sys.stderr)
         sys.exit(1)
     subcommand = sys.argv[1]
@@ -48,9 +56,12 @@ def _main() -> None:
     if subcommand == "set-sources":
         set_sources(data)
         print(f"wrote {len(data)} sources")
-    else:
+    elif subcommand == "set-wings":
         set_wings(data)
         print(f"wrote {len(data)} wings")
+    else:
+        set_memory(data)
+        print("wrote memory config")
 
 
 if __name__ == "__main__":
